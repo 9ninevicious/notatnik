@@ -1,0 +1,23 @@
+[
+  {
+    "Id": "125a4665-dd38-4169-92f2-6210973b20a6",
+    "Title": "sprawdzenie działania notatnika",
+    "Content": "##2026-09-08 14:32 — Zakupy\r\n\r\nchałwa\r\nmąka pszenna\r\n\r\n## 2026-09-07 09:15 — Pomysł na projekt\r\n\r\nminutnik z historią sesji",
+    "CreatedAt": "2026-10-29T08:16:18.7640146+01:00",
+    "UpdatedAt": "2026-10-29T08:16:48.1785242+01:00"
+  },
+  {
+    "Id": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+    "Title": "Witaj w Notatniku! \uD83D\uDCDD",
+    "Content": "To jest Twoja pierwsza notatka.\n\nznaki polskie działają\n\nWszystkie notatki są trwale zapisywane do tego pliku (notatki.json) na Twoim dysku.\n\nAby dodać nową notatkę, kliknij '+ Nowa' na górze listy notatek.",
+    "CreatedAt": "2026-10-29T08:00:00",
+    "UpdatedAt": "2026-10-29T08:15:15.2132701+01:00"
+  },
+  {
+    "Id": "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+    "Title": "Lista zadań na dzisiaj",
+    "Content": "1. Sprawdzić działanie notatnika\n2. Dodać nową notatkę\n3. Wypróbować wyszukiwarkę po lewej stronie\n4. Sprawdzić zapis w pliku JSON",
+    "CreatedAt": "2026-10-29T08:05:00",
+    "UpdatedAt": "2026-10-29T08:05:00"
+  }
+]

@@ -1,0 +1,248 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:notatnik"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
+        x:Class="notatnik.MainWindow"
+        x:DataType="local:MainWindow"
+        Title="Notatnik"
+        Width="1000" Height="650"
+        MinWidth="720" MinHeight="480"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Styles>
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="#2563EB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#1D4ED8"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style Selector="Button.secondary">
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style Selector="Button.danger">
+            <Setter Property="Foreground" Value="#EF4444"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.danger:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#FEE2E2"/>
+            <Setter Property="Foreground" Value="#B91C1C"/>
+        </Style>
+
+        <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,3"/>
+            <Setter Property="CornerRadius" Value="8"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid ColumnDefinitions="330, *">
+        <!-- LEWY PANEL: Lista notatek -->
+        <Border Grid.Column="0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                BorderThickness="0,0,1,0"
+                Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}">
+            <Grid RowDefinitions="Auto, Auto, *, Auto">
+                <!-- Nagłówek panelu bocznego -->
+                <Grid Grid.Row="0" Margin="16,16,16,12" ColumnDefinitions="*, Auto">
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <TextBlock Text="📝" FontSize="20" VerticalAlignment="Center"/>
+                        <TextBlock Text="Notatki" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Grid.Column="1"
+                            Classes="primary"
+                            Click="OnNewNoteClicked"
+                            ToolTip.Tip="Utwórz nową notatkę (Ctrl+N)">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock Text="＋" FontWeight="Bold"/>
+                            <TextBlock Text="Nowa"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+
+                <!-- Pole wyszukiwania -->
+                <Border Grid.Row="1" Margin="16,0,16,10">
+                    <TextBox x:Name="SearchTextBox"
+                             PlaceholderText="🔍 Szukaj w notatkach..."
+                             CornerRadius="6"
+                             TextChanged="OnSearchTextChanged"/>
+                </Border>
+
+                <!-- Lista zapisanych notatek -->
+                <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                    <ListBox x:Name="NotesListBox"
+                             Margin="12,0,12,0"
+                             Background="Transparent"
+                             SelectionChanged="OnNoteSelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="local:NoteModel">
+                                <Border Padding="12,10"
+                                        CornerRadius="8"
+                                        Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+                                    <Grid RowDefinitions="Auto, Auto, Auto">
+                                        <TextBlock Grid.Row="0"
+                                                   Text="{Binding DisplayTitle}"
+                                                   FontWeight="SemiBold"
+                                                   FontSize="14"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Row="1"
+                                                   Text="{Binding FormattedDate}"
+                                                   FontSize="11"
+                                                   Opacity="0.55"
+                                                   Margin="0,2,0,4"/>
+                                        <TextBlock Grid.Row="2"
+                                                   Text="{Binding PreviewSnippet}"
+                                                   FontSize="12"
+                                                   Opacity="0.75"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxLines="2"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+
+                <!-- Stopka panelu bocznego -->
+                <Border Grid.Row="3"
+                        BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                        BorderThickness="0,1,0,0"
+                        Padding="16,10">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <TextBlock x:Name="NotesCountTextBlock"
+                                   Text="Notatki: 0"
+                                   VerticalAlignment="Center"
+                                   FontSize="12"
+                                   Opacity="0.7"/>
+                        <Button Grid.Column="1"
+                                Classes="secondary"
+                                Click="OnOpenFileLocationClicked"
+                                ToolTip.Tip="Otwórz plik notatki.json na dysku"
+                                Padding="8,4">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock Text="📁" FontSize="12"/>
+                                <TextBlock Text="Plik notatek" FontSize="11"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- PRAWY PANEL: Edytor notatki -->
+        <Grid Grid.Column="1" Margin="24,18,24,16" RowDefinitions="Auto, Auto, *, Auto">
+            <!-- Pasek akcji edytora -->
+            <Grid Grid.Row="0" Margin="0,0,0,14" ColumnDefinitions="*, Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <TextBlock x:Name="EditorHeaderTextBlock"
+                               Text="Edycja notatki"
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               Opacity="0.7"
+                               VerticalAlignment="Center"/>
+                    <Border x:Name="UnsavedBadge"
+                            Background="#FEF3C7"
+                            CornerRadius="4"
+                            Padding="6,2"
+                            IsVisible="False"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="Niezapisane zmiany"
+                                   Foreground="#92400E"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"/>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                    <Button x:Name="DeleteButton"
+                            Classes="danger"
+                            Click="OnDeleteClicked"
+                            ToolTip.Tip="Usuń tę notatkę">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <TextBlock Text="🗑️"/>
+                            <TextBlock Text="Usuń"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="SaveButton"
+                            Classes="primary"
+                            Click="OnSaveClicked"
+                            ToolTip.Tip="Zapisz notatkę do pliku (Ctrl+S)">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="💾"/>
+                            <TextBlock Text="Zapisz notatkę"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- Pole na tytuł -->
+            <StackPanel Grid.Row="1" Margin="0,0,0,14">
+                <TextBlock Text="Tytuł notatki"
+                           FontSize="12"
+                           FontWeight="SemiBold"
+                           Opacity="0.7"
+                           Margin="0,0,0,6"/>
+                <TextBox x:Name="TitleTextBox"
+                         PlaceholderText="Wpisz tytuł notatki..."
+                         FontSize="16"
+                         FontWeight="SemiBold"
+                         Padding="12,9"
+                         CornerRadius="6"
+                         TextChanged="OnEditorTextChanged"/>
+            </StackPanel>
+
+            <!-- Pole na treść -->
+            <Grid Grid.Row="2" RowDefinitions="Auto, *">
+                <TextBlock Grid.Row="0"
+                           Text="Treść notatki"
+                           FontSize="12"
+                           FontWeight="SemiBold"
+                           Opacity="0.7"
+                           Margin="0,0,0,6"/>
+                <TextBox Grid.Row="1"
+                         x:Name="ContentTextBox"
+                         PlaceholderText="Wpisz tutaj treść notatki..."
+                         AcceptsReturn="True"
+                         AcceptsTab="True"
+                         TextWrapping="Wrap"
+                         VerticalAlignment="Stretch"
+                         VerticalContentAlignment="Top"
+                         Padding="14"
+                         CornerRadius="6"
+                         FontSize="14"
+                         LineHeight="22"
+                         TextChanged="OnEditorTextChanged"/>
+            </Grid>
+
+            <!-- Pasek statusu na dole -->
+            <Grid Grid.Row="3" Margin="0,12,0,0" ColumnDefinitions="*, Auto">
+                <TextBlock Grid.Column="0"
+                           x:Name="StatusTextBlock"
+                           Text="Gotowy"
+                           FontSize="12"
+                           Opacity="0.8"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="1"
+                           x:Name="StatsTextBlock"
+                           Text="Znaki: 0 | Słowa: 0"
+                           FontSize="12"
+                           Opacity="0.6"
+                           VerticalAlignment="Center"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

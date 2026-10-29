@@ -17,3 +17,11 @@ Wymagania funkcjonalne i interfejs:
    - Struktura rekordu: Id (string/guid), Title (string), Content (string), CreatedAt (DateTime), UpdatedAt (DateTime).
    - Lista notatek powinna być posortowana malejąco według daty UpdatedAt (najnowsze na górze).
    - Jeśli plik "notatki.json" nie istnieje przy starcie aplikacji, utwórz go automatycznie z jedną powitalną notatką demonstracyjną.
+
+W próbach nie zauważyłam żadnej różnicy, poza długością tekstu.
+  
+Zalecenie dotyczące promptowania od producenta modelu
+Źródło: [Google Gemini Prompting Guide](https://ai.google.dev/gemini-api/docs/prompting-intro)
+Data odczytania: 29.10.2026
+Zalecenie: opisuj dokładnie, co model ma wygenerować, zamiast czego ma unikać oraz stosuj ustrukturyzowane znaczniki i nagłówki do jednoznacznego rozdzielenia instrukcji systemowych od danych i kontekstu.
+Wpływ na notatnik: Zastosowanie pozytywnych instrukcji i wyraźnego podziału na sekcje techniczne sprawiło, że model od razu wygenerował kompletną, modularną strukturę kodu z poprawną obsługą błędów, bez zbędnych domysłów i bez tworzenia niepożądanych plików tymczasowych.
